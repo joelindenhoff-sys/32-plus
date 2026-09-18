@@ -1,4 +1,104 @@
 'use client';
+
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-const homes=[{title:'Light-filled apartment near the coast',location:'Maspalomas · Gran Canaria',price:'€1,850',image:'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=90'},{title:'Modern island home with terrace',location:'Las Palmas · Gran Canaria',price:'€1,650',image:'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=90'},{title:'Ocean-view seasonal apartment',location:'Costa Adeje · Tenerife',price:'€2,200',image:'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=90'}];
-export default function Homes(){const q=useSearchParams(); const where=q.get('where')||'Canary Islands'; return <main><header className="nav"><a href="/" className="logo-link"><img src="/logo.png" alt="32+" /></a><div className="nav-title">SEASONAL RENTALS</div><nav><a href="/owners">For owners</a><a href="/login" className="nav-button">Sign in</a></nav></header><section className="results"><p className="eyebrow">AVAILABLE HOMES</p><h1>Homes in <i>{where}</i></h1><p className="lead">Furnished seasonal rentals selected for temporary living.</p><div className="result-tools"><a href="/">← Change search</a><span>Minimum stay rules vary by destination.</span></div><div className="homes result-grid">{homes.map(h=><article className="home-card" key={h.title}><div className="home-photo" style={{backgroundImage:`url(${h.image})`}}><span>Seasonal rental</span></div><div className="home-info"><p>{h.location}</p><h3>{h.title}</h3><strong>{h.price}<small> / month</small></strong><a className="card-link" href="/login">Ask about this home →</a></div></article>)}</div></section></main>}
+
+const homes = [
+  {
+    title: 'Light-filled apartment near the coast',
+    location: 'Maspalomas · Gran Canaria',
+    price: '€1,850',
+    image:
+      'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=90',
+  },
+  {
+    title: 'Modern island home with terrace',
+    location: 'Las Palmas · Gran Canaria',
+    price: '€1,650',
+    image:
+      'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=90',
+  },
+  {
+    title: 'Ocean-view seasonal apartment',
+    location: 'Costa Adeje · Tenerife',
+    price: '€2,200',
+    image:
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=90',
+  },
+];
+
+function HomesContent() {
+  const q = useSearchParams();
+  const where = q.get('where') || 'Canary Islands';
+
+  return (
+    <main>
+      <header className="nav">
+        <a href="/" className="logo-link">
+          <img src="/logo.png" alt="32+" />
+        </a>
+
+        <div className="nav-title">SEASONAL RENTALS</div>
+
+        <nav>
+          <a href="/owners">For owners</a>
+          <a href="/login" className="nav-button">
+            Sign in
+          </a>
+        </nav>
+      </header>
+
+      <section className="results">
+        <p className="eyebrow">AVAILABLE HOMES</p>
+
+        <h1>
+          Homes in <i>{where}</i>
+        </h1>
+
+        <p className="lead">
+          Furnished seasonal rentals selected for temporary living.
+        </p>
+
+        <div className="result-tools">
+          <a href="/">← Change search</a>
+          <span>Minimum stay rules vary by destination.</span>
+        </div>
+
+        <div className="homes result-grid">
+          {homes.map((h) => (
+            <article className="home-card" key={h.title}>
+              <div
+                className="home-photo"
+                style={{ backgroundImage: `url(${h.image})` }}
+              >
+                <span>Seasonal rental</span>
+              </div>
+
+              <div className="home-info">
+                <p>{h.location}</p>
+                <h3>{h.title}</h3>
+
+                <strong>
+                  {h.price}
+                  <small> / month</small>
+                </strong>
+
+                <a className="card-link" href="/login">
+                  Ask about this home →
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+export default function Homes() {
+  return (
+    <Suspense fallback={<main>Loading homes...</main>}>
+      <HomesContent />
+    </Suspense>
+  );
+}
