@@ -1,0 +1,11 @@
+.nav-button{border:1px solid #c9d0d0;border-radius:999px;padding:10px 16px;background:transparent;color:var(--ink);cursor:pointer;font-size:13px}
+.status{display:inline-block;border-radius:999px;background:#edf4f2;padding:5px 9px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.actions{display:flex;gap:8px;margin-top:12px}
+.actions button{border:1px solid var(--ink);background:#fff;color:var(--ink);padding:8px 11px;cursor:pointer}
+.actions button.primary-small{background:var(--ink);color:#fff}
+.request-card{border-bottom:1px solid var(--line);padding:18px 0}
+.request-card p{margin:6px 0;font-size:12px}
+.loading{padding:70px 6vw;text-align:center}
+.form-help{font-size:11px;color:var(--muted);line-height:1.5}
+.import-button{height:44px}
+.account-switch{width:100%;border:0;background:none;color:var(--ink);margin-top:18px;cursor:pointer;text-decoration:underline}

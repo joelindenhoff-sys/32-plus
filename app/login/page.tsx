@@ -33,9 +33,13 @@ function LoginBox() {
       if (signUpError) return setError(signUpError.message);
       if (!data.session) return setNotice('Check your email to confirm your account, then sign in.');
     } else {
-      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
       setLoading(false);
       if (signInError) return setError(signInError.message);
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', signInData.user.id).single();
+      const next = query.get('next');
+      window.location.href = next && next.startsWith('/') ? next : profile?.role === 'owner' || profile?.role === 'admin' ? '/dashboard' : '/homes';
+      return;
     }
 
     window.location.href = role === 'owner' ? '/dashboard' : '/homes';
