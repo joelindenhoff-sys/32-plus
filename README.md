@@ -1,6 +1,24 @@
-# 32+ Seasonal Rentals
+# 32+ — functional V4 prototype
 
-V1 Canary Islands marketplace for furnished seasonal homes. Brand: 32+.
+A compact Airbnb-style seasonal rental marketplace prototype for 32+.
 
-## Stack
-Next.js 15 · React 19 · TypeScript · Vercel
+## Working flows
+- Homepage search: destination + move-in + move-out → `/homes`
+- Destination filters
+- Property cards → individual property pages
+- Property enquiry form with temporary-stay purpose and truth confirmation
+- Enquiries stored in browser localStorage
+- Tenant/owner sign-in demo
+- Owner dashboard demo
+- Owner can add a local listing and see enquiries submitted in the same browser
+- Responsive mobile layout
+
+## Important
+This version is a functional prototype using browser localStorage. It is **not yet a production multi-user system**. For production, replace localStorage with Supabase/Postgres, real authentication, server-side enquiry storage, email notifications and payment/contract services.
+
+## Run
+`npm install`
+`npm run dev`
+
+## Deploy
+Push the contents of this folder to the GitHub repository root and deploy with Vercel.
