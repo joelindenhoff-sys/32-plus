@@ -1,0 +1,19 @@
+.purpose-step > label:nth-of-type(3),
+.purpose-step > label:nth-of-type(4) {
+  display: none;
+}
+
+.purpose-step > label:nth-of-type(2) {
+  display: block;
+  font-size: 0;
+  font-weight: 700;
+}
+
+.purpose-step > label:nth-of-type(2)::before {
+  content: 'Other temporary reason — please explain';
+  font-size: 10px;
+}
+
+.purpose-step > label:nth-of-type(2) textarea {
+  font-size: 12px;
+}
