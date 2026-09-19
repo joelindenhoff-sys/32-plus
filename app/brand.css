@@ -1,18 +1,18 @@
 .nav .logo {
-  width: 124px;
-  height: 68px;
+  width: 102px;
+  height: 56px;
   object-fit: contain;
   display: block;
 }
 
 .footer > img {
-  width: 112px;
+  width: 96px;
   height: auto;
 }
 
 @media (max-width: 560px) {
   .nav .logo {
-    width: 68px;
-    height: 62px;
+    width: 54px;
+    height: 52px;
   }
 }
