@@ -10,7 +10,18 @@
   height: auto;
 }
 
+/* Match the header edges to the 1,148px-wide homepage content column. */
+.nav {
+  padding-left: max(20px, calc((100vw - 1148px) / 2)) !important;
+  padding-right: max(20px, calc((100vw - 1148px) / 2)) !important;
+}
+
 @media (max-width: 560px) {
+  .nav {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
   .nav .logo {
     width: 54px;
     height: 52px;
