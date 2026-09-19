@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 99" role="img" aria-label="32+">
+  <defs>
+    <clipPath id="symbol-only">
+      <path d="M0 0H112V47H88V99H0Z"/>
+    </clipPath>
+  </defs>
+  <image href="/logo.png" width="171" height="99" clip-path="url(#symbol-only)"/>
+</svg>
