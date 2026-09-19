@@ -8,6 +8,7 @@ import {PropertyRow} from '../../../../lib/data';
 import {supabase} from '../../../../lib/supabase';
 import '../../owner-tools.css';
 import './calendar.css';
+import '../../property/[id]/cancellation-note.css';
 
 type Month={key:string;label:string;year:number;month:number};
 const weekdays=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];

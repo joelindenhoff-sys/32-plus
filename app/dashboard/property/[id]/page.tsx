@@ -8,6 +8,7 @@ import {PropertyRow,islands} from '../../../../lib/data';
 import {supabase} from '../../../../lib/supabase';
 import '../../owner-tools.css';
 import './photo-editor-link.css';
+import './cancellation-note.css';
 
 export default function PropertyEditor(){
   const{id}=useParams<{id:string}>();
