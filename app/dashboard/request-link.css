@@ -1,0 +1,29 @@
+.request-property-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  color: #12313c;
+  font-size: 14px;
+  font-weight: 700;
+}
+.request-property-link span {
+  display: grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  border: 1px solid #cbd4d2;
+  border-radius: 50%;
+  font-size: 12px;
+  transition: 0.18s ease;
+}
+.request-property-link:hover span {
+  border-color: #12313c;
+  background: #12313c;
+  color: #fff;
+}
+.request-card .inquiry-date {
+  margin-top: -5px !important;
+  color: #7a888d !important;
+  font-size: 10px !important;
+}

@@ -14,6 +14,7 @@ import "./listing-actions.css";
 import "./listing-actions-row.css";
 import SignaturePad from "./SignaturePad";
 import "./signature-pad.css";
+import "./request-link.css";
 
 type Profile = {
   id: string;
@@ -634,10 +635,19 @@ function RequestCard({
     request.status === "confirmed";
   return (
     <div className="request-card">
-      <strong>{request.properties?.title || "Seasonal home"}</strong>
+      <Link
+        className="request-property-link"
+        href={`/home/${request.property_id}`}
+      >
+        {request.properties?.title || "Seasonal home"}
+        <span>→</span>
+      </Link>
       <p>
         {europeanDate(request.move_in)} → {europeanDate(request.move_out)} ·{" "}
         {request.occupants} occupant{request.occupants === 1 ? "" : "s"}
+      </p>
+      <p className="inquiry-date">
+        Inquiry sent {europeanDateTime(request.created_at)}
       </p>
       <p>
         <strong>Purpose:</strong> {request.purpose_category}
