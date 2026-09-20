@@ -1290,7 +1290,13 @@ function OwnerDashboardWithDeposit({ data }: { data: any }) {
                 when you are ready to receive rental requests.
               </p>
             </div>
-            <a href="#add-property">Start a listing →</a>
+            <button
+              type="button"
+              className="start-listing-button"
+              onClick={startListing}
+            >
+              Start a listing →
+            </button>
           </div>
           <div className="publish-steps">
             <article>
@@ -1396,18 +1402,6 @@ function OwnerDashboardWithDeposit({ data }: { data: any }) {
                 <p>Add your first furnished seasonal property below.</p>
               </div>
             )}
-            <div id="add-property" className="add-listing-link">
-              <div>
-                <strong>Add a new property</strong>
-                <span>
-                  Create an unpublished draft and complete the property details
-                  before publishing.
-                </span>
-              </div>
-              <button type="button" className="primary" onClick={startListing}>
-                Add new property ＋
-              </button>
-            </div>
           </section>
           <aside className="panel account-panel">
             <h2>Rental requests</h2>
