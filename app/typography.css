@@ -1,0 +1,320 @@
+/*
+ * Shared type scale modelled on Airbnb's marketplace UI.
+ * Keep display headings expressive, but never shrink functional or supporting
+ * copy below a comfortable reading size.
+ */
+:root {
+  --text-caption: 12px;
+  --text-small: 14px;
+  --text-body: 16px;
+  --text-card-title: 16px;
+  --text-section-title: 26px;
+}
+
+body {
+  font-size: var(--text-body);
+  line-height: 1.43;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Global navigation and reusable controls */
+.nav nav,
+.nav-button {
+  font-size: var(--text-small);
+}
+
+.eyebrow {
+  font-size: var(--text-caption);
+  letter-spacing: 1.7px;
+}
+
+.pill,
+.primary,
+button,
+input,
+select,
+textarea {
+  font-size: var(--text-small);
+}
+
+.footer,
+.footer a {
+  font-size: var(--text-small);
+}
+
+.login-heading .eyebrow,
+.field span,
+.tag,
+.facts span {
+  font-size: var(--text-caption);
+}
+
+.location,
+.card-link,
+.filters button,
+.form label,
+.delete-listing {
+  font-size: var(--text-small);
+}
+
+/* Homepage */
+.market-intro,
+.market-search select,
+.market-search input,
+.market-search button,
+.collection-title p,
+.market-banner p:not(.eyebrow),
+.market-faq article p {
+  font-size: var(--text-body);
+}
+
+.market-search span,
+.market-card-image span {
+  font-size: var(--text-caption);
+}
+
+.market-benefits h2 {
+  font-size: 18px;
+}
+
+.market-benefits p,
+.collection-title a,
+.market-banner a,
+.market-owner p:not(.eyebrow),
+.market-owner a {
+  font-size: var(--text-small);
+}
+
+.market-card-copy h3,
+.market-card-copy strong {
+  font-size: var(--text-card-title);
+}
+
+.market-card-copy p {
+  font-size: var(--text-small);
+}
+
+/* Search results */
+.compact-search span,
+.request-badge,
+.map-label {
+  font-size: var(--text-caption);
+}
+
+.compact-search select,
+.compact-search input,
+.filter-row button,
+.results-heading > div > p:last-child,
+.results-heading > button,
+.result-title span,
+.result-copy p,
+.map-price {
+  font-size: var(--text-small);
+}
+
+.result-title h2,
+.result-price,
+.result-price strong {
+  font-size: var(--text-card-title);
+}
+
+/* Property presentation and rental request */
+.property-top .back,
+.property-actions button,
+.photo-last button,
+.host-row span,
+.property-highlights span,
+.stay-process li span,
+.stay-summary,
+.request-note,
+.booking-summary > p,
+.no-charge {
+  font-size: var(--text-caption);
+}
+
+.property-summary p,
+.host-row strong,
+.property-highlights strong,
+.property-description p,
+.amenities p,
+.stay-process li strong,
+.request-price span,
+.request-form label,
+.request-form input,
+.request-form select,
+.request-form textarea,
+.estimate,
+.booking-detail span,
+.booking-help,
+.booking-detail a,
+.booking-form label:not(.booking-check),
+.booking-check,
+.booking-property strong,
+.booking-property span,
+.booking-property small,
+.summary-line {
+  font-size: var(--text-small);
+}
+
+.request-form label span {
+  font-size: var(--text-caption);
+}
+
+.purpose-step > label:nth-of-type(2)::before,
+.photo-modal-title span,
+.property-map-section p {
+  font-size: var(--text-caption);
+}
+
+.purpose-step > label:nth-of-type(2) textarea,
+.photo-modal-title strong,
+.photo-modal-actions button,
+.property-map-section > strong {
+  font-size: var(--text-small);
+}
+
+.property-details h2,
+.request-price strong,
+.booking-form h2 {
+  font-size: 22px;
+}
+
+/* Account, listing and owner tools */
+.dashboard-switch button,
+.account-hero > div > p:last-child,
+.account-section-title p,
+.account-section-title > a,
+.account-empty p,
+.account-primary,
+.add-listing-link span,
+.publish-guide-heading > div > p:last-child,
+.publish-guide-heading > a,
+.outline-action,
+.upload-photos,
+.start-listing-button {
+  font-size: var(--text-small);
+}
+
+.account-overview small,
+.account-page .listing-row .muted,
+.account-page .listing-links .card-link,
+.account-page .delete-listing,
+.owner-tool-header > a:first-child,
+.owner-editor label,
+.owner-editor label > span,
+.photo-placeholder,
+.photo-editor-link span,
+.photo-editor-link a,
+.photo-tour-grid article > span,
+.photo-tour-grid button,
+.empty-photo-tour p,
+.publish-steps b,
+.publish-steps small,
+.publish-note strong,
+.publish-note span,
+.publish-note a,
+.listing-requirements strong,
+.listing-requirements span,
+.publish-steps article small,
+.request-card .inquiry-date,
+.form-help,
+.status,
+.request-card p {
+  font-size: var(--text-caption) !important;
+}
+
+.account-page .listing-row > div > strong,
+.photo-editor-link strong,
+.publish-steps strong,
+.publish-steps article strong {
+  font-size: var(--text-card-title);
+}
+
+.account-overview small,
+.account-page .listing-row .muted,
+.request-card p,
+.publish-guide-heading > div > p:last-child,
+.publish-steps small,
+.publish-steps article small,
+.publish-note span,
+.listing-requirements span {
+  font-size: var(--text-small) !important;
+}
+
+.owner-editor input,
+.owner-editor select,
+.owner-editor textarea {
+  font-size: var(--text-small);
+}
+
+/* Calendar and pricing */
+.calendar-settings-card > p,
+.pricing-heading p,
+.calendar-settings-card label,
+.calendar-settings-card label > span,
+.month-price-mode,
+.month-price-mode button,
+.weekday-row b,
+.sync-step > b,
+.sync-step > div > span,
+.sync-guidance strong,
+.sync-guidance ol {
+  font-size: var(--text-caption);
+}
+
+.owner-editor section:nth-of-type(2) > label:nth-of-type(4)::after,
+.calendar-page .settings-grid > label:nth-of-type(4)::after {
+  font-size: var(--text-caption);
+}
+
+.calendar-settings-card input,
+.calendar-settings-card select,
+.month-calendar header > strong,
+.month-calendar header input,
+.day-grid span,
+.sync-step > div > strong,
+.copy-row button {
+  font-size: var(--text-small);
+}
+
+.calendar-settings-card > p,
+.pricing-heading p,
+.sync-step > div > span,
+.sync-guidance ol {
+  font-size: var(--text-small);
+}
+
+/* Agreement: legal copy must remain comfortably readable. */
+.contract-toggle,
+.contract-document header p,
+.contract-document dt,
+.contract-document dd,
+.contract-document section p,
+.contract-signatures strong,
+.contract-signatures span,
+.signature-pad > strong,
+.signature-pad > button {
+  font-size: var(--text-caption) !important;
+}
+
+.contract-document section h3 {
+  font-size: var(--text-small);
+}
+
+.login-divider,
+.login-footnote {
+  font-size: var(--text-caption);
+}
+
+@media (max-width: 560px) {
+  :root {
+    --text-body: 15px;
+    --text-small: 14px;
+  }
+
+  .market-card-image span,
+  .results-heading .eyebrow,
+  .mobile-search-summary span {
+    font-size: var(--text-caption);
+  }
+}
