@@ -16,6 +16,7 @@ import "./listing-actions-row.css";
 import SignaturePad from "./SignaturePad";
 import "./signature-pad.css";
 import "./request-link.css";
+import "./saved-homes.css";
 
 type Profile = {
   id: string;
@@ -72,6 +73,15 @@ type VisibleContract = NonNullable<RentalRequest["contracts"]> & {
   rental_request_id: string;
 };
 
+type SavedHome = {
+  property_id: string;
+  created_at: string;
+  properties: Pick<
+    PropertyRow,
+    "id" | "title" | "location" | "monthly_rent" | "image_url"
+  > | null;
+};
+
 export default function Dashboard() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [email, setEmail] = useState("");
@@ -80,6 +90,7 @@ export default function Dashboard() {
   const [mode, setMode] = useState<"tenant" | "owner">("tenant");
   const [listings, setListings] = useState<PropertyRow[]>([]);
   const [requests, setRequests] = useState<RentalRequest[]>([]);
+  const [savedHomes, setSavedHomes] = useState<SavedHome[]>([]);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [island, setIsland] = useState("Gran Canaria");
@@ -131,14 +142,26 @@ export default function Dashboard() {
         await attachVisibleContracts((requestData || []) as RentalRequest[]),
       );
     } else {
-      const { data } = await supabase
-        .from("rental_requests")
-        .select(
-          "*, properties(title, location, monthly_rent, security_deposit)",
-        )
-        .eq("tenant_id", userId)
-        .order("created_at", { ascending: false });
+      const [{ data }, { data: savedData, error: savedError }] =
+        await Promise.all([
+          supabase
+            .from("rental_requests")
+            .select(
+              "*, properties(title, location, monthly_rent, security_deposit)",
+            )
+            .eq("tenant_id", userId)
+            .order("created_at", { ascending: false }),
+          supabase
+            .from("saved_properties")
+            .select(
+              "property_id, created_at, properties(id, title, location, monthly_rent, image_url)",
+            )
+            .eq("user_id", userId)
+            .order("created_at", { ascending: false }),
+        ]);
+      if (savedError) throw savedError;
       setRequests(await attachVisibleContracts((data || []) as RentalRequest[]));
+      setSavedHomes((savedData || []) as unknown as SavedHome[]);
     }
   }
   useEffect(() => {
@@ -426,6 +449,13 @@ export default function Dashboard() {
                 </small>
               </div>
             </article>
+            <article>
+              <span>♥</span>
+              <div>
+                <strong>{savedHomes.length}</strong>
+                <small>Saved home{savedHomes.length === 1 ? "" : "s"}</small>
+              </div>
+            </article>
             <Link href="/homes">
               <span>⌕</span>
               <div>
@@ -435,6 +465,41 @@ export default function Dashboard() {
               <b>→</b>
             </Link>
           </section>
+          <div className="account-section-title">
+            <div>
+              <h2>Saved homes</h2>
+              <p>Properties you would like to revisit.</p>
+            </div>
+            <Link href="/homes">Browse homes</Link>
+          </div>
+          {savedHomes.some((savedHome) => savedHome.properties) ? (
+            <section className="saved-homes-grid">
+              {savedHomes.map(({ property_id, properties }) =>
+                properties ? (
+                  <Link key={property_id} href={`/home/${properties.id}`}>
+                    <img
+                      src={properties.image_url || homes[0].image}
+                      alt={`View ${properties.title}`}
+                    />
+                    <div>
+                      <h3>{properties.title}</h3>
+                      <p>{properties.location}</p>
+                      <strong>
+                        €{properties.monthly_rent.toLocaleString()} / month
+                      </strong>
+                    </div>
+                  </Link>
+                ) : null,
+              )}
+            </section>
+          ) : (
+            <section className="panel account-panel saved-homes-empty">
+              <p>Homes you save will appear here.</p>
+              <Link className="account-primary" href="/homes">
+                Browse homes
+              </Link>
+            </section>
+          )}
           <div className="account-section-title">
             <div>
               <h2>Your rental requests</h2>
