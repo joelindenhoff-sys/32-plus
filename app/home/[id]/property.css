@@ -2,5 +2,15 @@
 .request-dates{border-radius:9px}
 .guest-field{margin-top:14px;border-top:1px solid #bcc7c6;border-radius:9px}
 .guest-field small{display:block;margin-top:3px;color:#68787d;font-size:9px;font-weight:400}
+.property-top .back{display:inline-flex;align-items:center;gap:5px;color:#12313c;font-size:12px;font-weight:650;text-decoration:none}
+.property-top .back svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s ease}
+.property-top .back:hover svg{transform:translateX(-2px)}
+.property-actions{gap:8px}
+.property-actions button{display:inline-flex;min-height:38px;align-items:center;gap:7px;padding:8px 12px;border:1px solid transparent;border-radius:999px;background:transparent;color:#12313c;text-decoration:none;font-size:12px;font-weight:650;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+.property-actions button:hover{border-color:#d8dfde;background:#f7f8f7}
+.property-actions button:active{transform:scale(.97)}
+.property-actions button:focus-visible,.property-top .back:focus-visible{outline:2px solid #12313c;outline-offset:3px}
+.property-actions button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.property-actions button.is-saved svg{fill:#ee6f9c;stroke:#cf4f7c}
 @media(max-width:900px){.property-page{padding:22px 20px 65px}.photo-gallery{grid-template-columns:2fr 1fr;grid-template-rows:180px 180px}.photo-gallery>div:nth-child(4),.photo-gallery>div:nth-child(5){display:none}.property-content{grid-template-columns:1fr;gap:35px}.request-panel{position:static;grid-row:1}.property-details{grid-row:2}}
 @media(max-width:600px){.property-top{align-items:flex-start}.property-top h1{font-size:22px}.property-actions button:first-child{display:none}.photo-gallery{display:block;height:290px}.photo-gallery>div{display:none}.photo-gallery .photo-main{display:block;height:100%}.property-content{padding-top:24px}.request-panel{padding:19px}.amenities>div{grid-template-columns:1fr}.property-actions{padding-top:20px}}
