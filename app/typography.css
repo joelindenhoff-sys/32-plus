@@ -103,6 +103,31 @@ textarea {
   font-size: var(--text-small);
 }
 
+.owner-fee-card {
+  display: grid;
+  gap: 6px;
+  max-width: 440px;
+  margin-top: 30px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.owner-fee-card span {
+  font-size: var(--text-small);
+  color: var(--muted);
+}
+
+.owner-fee-card strong {
+  font-size: 28px;
+}
+
+.owner-fee-card p {
+  margin: 2px 0 0;
+  font-size: var(--text-small);
+}
+
 /* Search results */
 .compact-search span,
 .request-badge,

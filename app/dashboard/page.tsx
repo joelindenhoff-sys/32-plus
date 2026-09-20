@@ -4,6 +4,7 @@ import { FormEvent, ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
 import { Header, Footer } from "../components";
 import { homes, islands, PropertyRow } from "../../lib/data";
+import { formatFeeRate, formatMinorUnits } from "../../lib/pricing";
 import { supabase } from "../../lib/supabase";
 import "./dashboard.css";
 import "./publishing-guide.css";
@@ -36,6 +37,19 @@ type RentalRequest = {
   relevant_organisation: string | null;
   status: string;
   created_at: string;
+  accommodation_amount: number | null;
+  guest_fee_rate: number | null;
+  guest_fee_amount: number | null;
+  owner_fee_rate: number | null;
+  owner_fee_amount: number | null;
+  guest_total_amount: number | null;
+  owner_net_amount: number | null;
+  platform_gross_revenue: number | null;
+  currency: string | null;
+  payment_processing_cost: number | null;
+  payment_status: string;
+  payout_status: string;
+  scheduled_payout_at: string | null;
   properties?: {
     title: string;
     location: string;
@@ -660,6 +674,7 @@ function RequestCard({
           ? "Contract signed"
           : request.status.replace("_", " ")}
       </span>
+      <BookingFinancialBreakdown request={request} ownerView={owner} />
       {owner && request.status === "submitted" && (
         <div className="acceptance">
           {ownerSignature ? (
@@ -766,6 +781,79 @@ function RequestCard({
         </p>
       )}
     </div>
+  );
+}
+
+function BookingFinancialBreakdown({
+  request,
+  ownerView,
+}: {
+  request: RentalRequest;
+  ownerView: boolean;
+}) {
+  if (
+    request.accommodation_amount === null ||
+    request.currency === null ||
+    request.guest_fee_rate === null ||
+    request.guest_fee_amount === null ||
+    request.owner_fee_rate === null ||
+    request.owner_fee_amount === null ||
+    request.guest_total_amount === null ||
+    request.owner_net_amount === null
+  )
+    return null;
+
+  return (
+    <section className="booking-financials" aria-label="Booking price">
+      <div>
+        <span>Accommodation</span>
+        <strong>
+          {formatMinorUnits(request.accommodation_amount, request.currency)}
+        </strong>
+      </div>
+      {ownerView ? (
+        <>
+          <div>
+            <span>
+              32+ service fee ({formatFeeRate(request.owner_fee_rate)})
+            </span>
+            <strong>
+              −{formatMinorUnits(request.owner_fee_amount, request.currency)}
+            </strong>
+          </div>
+          <div className="financial-total">
+            <span>Your proceeds</span>
+            <strong>
+              {formatMinorUnits(request.owner_net_amount, request.currency)}
+            </strong>
+          </div>
+          {request.scheduled_payout_at && (
+            <p>
+              Scheduled release: {europeanDateTime(request.scheduled_payout_at)}
+              <br />
+              Payout status: {request.payout_status.replaceAll("_", " ")}
+            </p>
+          )}
+        </>
+      ) : (
+        <>
+          <div>
+            <span>
+              32+ service fee ({formatFeeRate(request.guest_fee_rate)})
+            </span>
+            <strong>
+              {formatMinorUnits(request.guest_fee_amount, request.currency)}
+            </strong>
+          </div>
+          <div className="financial-total">
+            <span>Total</span>
+            <strong>
+              {formatMinorUnits(request.guest_total_amount, request.currency)}
+            </strong>
+          </div>
+        </>
+      )}
+    </section>
   );
 }
 
