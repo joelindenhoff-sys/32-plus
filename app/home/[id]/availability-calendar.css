@@ -1,0 +1,123 @@
+.availability-calendar {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid #dde2e1;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.availability-calendar header,
+.availability-weekdays,
+.availability-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.availability-calendar header {
+  grid-template-columns: 36px 1fr 36px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.availability-calendar header strong {
+  text-align: center;
+  font-size: 14px;
+}
+
+.availability-calendar header button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #d8dedd;
+  border-radius: 50%;
+  background: #fff;
+  color: #12313c;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.availability-weekdays span {
+  padding: 4px 0 7px;
+  color: #69777d;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.availability-days button {
+  position: relative;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #12313c;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.availability-days button:hover:not(:disabled),
+.availability-days button.selected {
+  background: #12313c;
+  color: #fff;
+}
+
+.availability-days button.in-selection {
+  border-radius: 0;
+  background: #e9f4f6;
+}
+
+.availability-days button:disabled {
+  cursor: not-allowed;
+  color: #a6aeaf;
+}
+
+.availability-days button.reserved {
+  background: #f3f3f1;
+  color: #9b9f9f;
+  text-decoration: line-through;
+}
+
+.availability-days button.reserved::after {
+  content: "";
+  position: absolute;
+  right: 22%;
+  bottom: 16%;
+  left: 22%;
+  height: 2px;
+  border-radius: 2px;
+  background: #ee6f9c;
+}
+
+.availability-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+  color: #69777d;
+  font-size: 10px;
+}
+
+.availability-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.availability-legend i {
+  width: 9px;
+  height: 9px;
+  border: 1px solid #9ca8aa;
+  border-radius: 50%;
+}
+
+.availability-legend i.reserved {
+  border-color: #ee6f9c;
+  background: #ee6f9c;
+}
+
+.availability-calendar > p {
+  margin: 9px 0 0;
+  color: #69777d;
+  font-size: 10px;
+  line-height: 1.4;
+}
