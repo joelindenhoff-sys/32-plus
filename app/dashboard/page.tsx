@@ -64,7 +64,12 @@ type RentalRequest = {
     tenant_name: string | null;
     owner_signature_data: string | null;
     tenant_signature_data: string | null;
+    identity_released: boolean;
   } | null;
+};
+
+type VisibleContract = NonNullable<RentalRequest["contracts"]> & {
+  rental_request_id: string;
 };
 
 export default function Dashboard() {
@@ -87,8 +92,23 @@ export default function Dashboard() {
   const [saved, setSaved] = useState("");
 
   async function refresh(userId: string, view: "tenant" | "owner") {
-    const contractFields =
-      "contracts(owner_approved_at, tenant_signed_at, contract_version, owner_name, tenant_name, owner_signature_data, tenant_signature_data)";
+    async function attachVisibleContracts(rows: RentalRequest[]) {
+      if (!rows.length) return rows;
+      const { data: contractData, error: contractError } = await supabase.rpc(
+        "get_visible_contracts",
+      );
+      if (contractError) throw contractError;
+      const contracts = new Map(
+        ((contractData || []) as VisibleContract[]).map((contract) => [
+          contract.rental_request_id,
+          contract,
+        ]),
+      );
+      return rows.map((request) => ({
+        ...request,
+        contracts: contracts.get(request.id) || null,
+      }));
+    }
     if (view === "owner") {
       const [{ data: propertyData }, { data: requestData }] = await Promise.all(
         [
@@ -100,23 +120,25 @@ export default function Dashboard() {
           supabase
             .from("rental_requests")
             .select(
-              `*, properties(title, location, monthly_rent, security_deposit), ${contractFields}`,
+              "*, properties(title, location, monthly_rent, security_deposit)",
             )
             .eq("owner_id", userId)
             .order("created_at", { ascending: false }),
         ],
       );
       setListings((propertyData || []) as PropertyRow[]);
-      setRequests((requestData || []) as RentalRequest[]);
+      setRequests(
+        await attachVisibleContracts((requestData || []) as RentalRequest[]),
+      );
     } else {
       const { data } = await supabase
         .from("rental_requests")
         .select(
-          `*, properties(title, location, monthly_rent, security_deposit), ${contractFields}`,
+          "*, properties(title, location, monthly_rent, security_deposit)",
         )
         .eq("tenant_id", userId)
         .order("created_at", { ascending: false });
-      setRequests((data || []) as RentalRequest[]);
+      setRequests(await attachVisibleContracts((data || []) as RentalRequest[]));
     }
   }
   useEffect(() => {
@@ -915,6 +937,13 @@ function ContractAgreement({
           </div>
         )}
       </dl>
+      {!request.contracts?.identity_released && (
+        <p className="contract-privacy-note">
+          For booking security, only first names are shared between the parties
+          before confirmed payment. Full contractual identities and the other
+          party&apos;s signature are released after payment.
+        </p>
+      )}
       <ContractClause number="1" title="Purpose">
         <p>
           The property is rented on a temporary basis (
