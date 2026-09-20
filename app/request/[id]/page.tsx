@@ -107,7 +107,11 @@ function RequestReview() {
       if (!active) return;
       if (quoteError) {
         setQuote(null);
-        setError("Pricing is temporarily unavailable. Please try again.");
+        setError(
+          quoteError.message.includes("no longer available")
+            ? "These dates are already reserved. Please choose different dates."
+            : "Pricing is temporarily unavailable. Please try again.",
+        );
         return;
       }
       setError("");
