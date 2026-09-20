@@ -73,20 +73,9 @@
 }
 
 .availability-days button.reserved {
-  background: #f3f3f1;
+  background: transparent;
   color: #9b9f9f;
   text-decoration: line-through;
-}
-
-.availability-days button.reserved::after {
-  content: "";
-  position: absolute;
-  right: 22%;
-  bottom: 16%;
-  left: 22%;
-  height: 2px;
-  border-radius: 2px;
-  background: #ee6f9c;
 }
 
 .availability-legend {
@@ -111,8 +100,8 @@
 }
 
 .availability-legend i.reserved {
-  border-color: #ee6f9c;
-  background: #ee6f9c;
+  border-color: #9b9f9f;
+  background: #e6e6e6;
 }
 
 .availability-calendar > p {
