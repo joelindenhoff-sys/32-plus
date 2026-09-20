@@ -2,6 +2,7 @@
 .request-dates{border-radius:9px}
 .guest-field{margin-top:14px;border-top:1px solid #bcc7c6;border-radius:9px}
 .guest-field small{display:block;margin-top:3px;color:#68787d;font-size:9px;font-weight:400}
+.guest-field + .request-continue{margin-top:14px}
 .property-top .back{display:inline-flex;align-items:center;gap:5px;color:#12313c;font-size:12px;font-weight:650;text-decoration:none}
 .property-top .back svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s ease}
 .property-top .back:hover svg{transform:translateX(-2px)}
