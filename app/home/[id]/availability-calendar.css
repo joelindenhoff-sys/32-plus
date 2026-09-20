@@ -93,15 +93,19 @@
 }
 
 .availability-legend i {
-  width: 9px;
-  height: 9px;
-  border: 1px solid #9ca8aa;
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  color: #12313c;
   border-radius: 50%;
+  font-size: 9px;
+  font-style: normal;
 }
 
 .availability-legend i.reserved {
-  border-color: #9b9f9f;
-  background: #e6e6e6;
+  color: #9b9f9f;
+  text-decoration: line-through;
 }
 
 .availability-calendar > p {

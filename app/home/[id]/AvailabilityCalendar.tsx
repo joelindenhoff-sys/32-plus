@@ -154,8 +154,12 @@ export default function AvailabilityCalendar({
         })}
       </div>
       <div className="availability-legend">
-        <span><i /> Available</span>
-        <span><i className="reserved" /> Reserved</span>
+        <span>
+          <i>15</i> Available
+        </span>
+        <span>
+          <i className="reserved">15</i> Reserved
+        </span>
       </div>
       <p>
         {!moveIn
