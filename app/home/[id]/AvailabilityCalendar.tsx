@@ -2,6 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../../../lib/supabase";
+import {
+  countStayNights,
+  getStayDurationError,
+  MAXIMUM_STAY_NIGHTS,
+  MINIMUM_STAY_NIGHTS,
+} from "../../../lib/rentalRules";
 
 type BlockedPeriod = { move_in: string; move_out: string };
 
@@ -26,12 +32,14 @@ export default function AvailabilityCalendar({
   propertyId,
   moveIn,
   moveOut,
+  minimumNights = MINIMUM_STAY_NIGHTS,
   onChange,
   onUnavailable,
 }: {
   propertyId: string;
   moveIn: string;
   moveOut: string;
+  minimumNights?: number;
   onChange: (moveIn: string, moveOut: string) => void;
   onUnavailable: (message: string) => void;
 }) {
@@ -76,6 +84,12 @@ export default function AvailabilityCalendar({
       onUnavailable(
         "That stay crosses reserved dates. Please choose an earlier move-out date or a new move-in date.",
       );
+      return;
+    }
+
+    const durationError = getStayDurationError(moveIn, value, minimumNights);
+    if (durationError) {
+      onUnavailable(durationError);
       return;
     }
 
@@ -135,6 +149,14 @@ export default function AvailabilityCalendar({
           const outsideMonth = date.getMonth() !== visibleMonth.getMonth();
           const reserved = blocked.some((period) => isWithin(value, period));
           const past = value < today;
+          const proposedNights = moveIn && !moveOut ? countStayNights(moveIn, value) : 0;
+          const invalidMoveOut = Boolean(
+            moveIn &&
+              !moveOut &&
+              value > moveIn &&
+              (proposedNights < Math.max(MINIMUM_STAY_NIGHTS, minimumNights) ||
+                proposedNights > MAXIMUM_STAY_NIGHTS),
+          );
           const selected = value === moveIn || value === moveOut;
           const inSelection = Boolean(
             moveIn && moveOut && value > moveIn && value < moveOut,
@@ -143,8 +165,8 @@ export default function AvailabilityCalendar({
             <button
               type="button"
               key={value}
-              disabled={outsideMonth || reserved || past}
-              aria-label={`${value}${reserved ? ", reserved" : ""}`}
+              disabled={outsideMonth || reserved || past || invalidMoveOut}
+              aria-label={`${value}${reserved ? ", reserved" : invalidMoveOut ? ", outside permitted stay length" : ""}`}
               className={`${reserved ? "reserved" : ""} ${selected ? "selected" : ""} ${inSelection ? "in-selection" : ""}`}
               onClick={() => choose(date)}
             >
@@ -165,7 +187,7 @@ export default function AvailabilityCalendar({
         {!moveIn
           ? "Select your move-in date."
           : !moveOut
-            ? "Now select your move-out date."
+            ? `Select a move-out date ${Math.max(MINIMUM_STAY_NIGHTS, minimumNights)} to ${MAXIMUM_STAY_NIGHTS} nights after move-in.`
             : "Your selected rental period is highlighted."}
       </p>
     </section>

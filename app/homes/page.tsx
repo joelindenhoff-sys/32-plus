@@ -6,6 +6,7 @@ import Link from 'next/link';
 import {Header,Footer} from '../components';
 import {homes,islands,Home,propertyToHome,PropertyRow} from '../../lib/data';
 import {supabase} from '../../lib/supabase';
+import {getStayDurationError} from '../../lib/rentalRules';
 import './results.css';
 
 type Filter='pool'|'wifi'|'air'|'beds'|'budget';
@@ -15,7 +16,7 @@ function Results(){
   const[where,setWhere]=useState(initialWhere);const[moveIn,setMoveIn]=useState(query.get('moveIn')||'');const[moveOut,setMoveOut]=useState(query.get('moveOut')||'');const[guests,setGuests]=useState(query.get('guests')||'1');
   const[all,setAll]=useState<Home[]>(homes);const[active,setActive]=useState<Filter[]>([]);const[loading,setLoading]=useState(true);const[unavailable,setUnavailable]=useState<Set<string>>(new Set());
   useEffect(()=>{supabase.from('properties').select('*').eq('is_published',true).order('created_at',{ascending:false}).then(({data})=>{if(data?.length)setAll((data as PropertyRow[]).map(propertyToHome));setLoading(false)})},[]);
-  useEffect(()=>{if(!moveIn||!moveOut){setUnavailable(new Set());return}let active=true;Promise.all(all.map(async home=>{if(!/^[0-9a-f-]{36}$/i.test(home.id))return null;const{data,error}=await supabase.rpc('is_property_available',{p_property_id:home.id,p_move_in:moveIn,p_move_out:moveOut});return!error&&data?null:home.id})).then(ids=>{if(active)setUnavailable(new Set(ids.filter((id):id is string=>Boolean(id))))});return()=>{active=false}},[all,moveIn,moveOut]);
+  useEffect(()=>{if(!moveIn||!moveOut||getStayDurationError(moveIn,moveOut)){setUnavailable(new Set());return}let active=true;Promise.all(all.map(async home=>{if(!/^[0-9a-f-]{36}$/i.test(home.id))return null;const{data,error}=await supabase.rpc('is_property_available',{p_property_id:home.id,p_move_in:moveIn,p_move_out:moveOut});return!error&&data?null:home.id})).then(ids=>{if(active)setUnavailable(new Set(ids.filter((id):id is string=>Boolean(id))))});return()=>{active=false}},[all,moveIn,moveOut]);
   const filtered=useMemo(()=>all.filter(home=>!unavailable.has(home.id)&&(where==='Canary Islands'||home.island===where)&&(!active.includes('pool')||home.features.some(feature=>feature.toLowerCase().includes('pool')))&&(!active.includes('wifi')||home.features.some(feature=>feature.toLowerCase().includes('wi')))&&(!active.includes('air')||home.features.some(feature=>feature.toLowerCase().includes('air')))&&(!active.includes('beds')||home.bedrooms>=2)&&(!active.includes('budget')||home.price<=1800)),[all,where,active,unavailable]);
   function toggle(filter:Filter){setActive(current=>current.includes(filter)?current.filter(item=>item!==filter):[...current,filter])}
   function search(event:FormEvent){event.preventDefault();const params=new URLSearchParams({where,guests});if(moveIn)params.set('moveIn',moveIn);if(moveOut)params.set('moveOut',moveOut);window.history.replaceState(null,'','/homes?'+params)}

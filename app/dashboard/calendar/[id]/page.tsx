@@ -6,6 +6,7 @@ import {useParams} from 'next/navigation';
 import {Header,Footer} from '../../../components';
 import {PropertyRow} from '../../../../lib/data';
 import {supabase} from '../../../../lib/supabase';
+import {MAXIMUM_STAY_NIGHTS,MINIMUM_STAY_NIGHTS} from '../../../../lib/rentalRules';
 import '../../owner-tools.css';
 import './calendar.css';
 import '../../property/[id]/cancellation-note.css';
@@ -25,7 +26,7 @@ export default function CalendarSettings(){
   const months=useMemo(()=>monthKeys(horizon),[horizon]);
   useEffect(()=>{supabase.from('properties').select('*').eq('id',id).single().then(({data,error})=>{if(error)setError(error.message);else setProperty(data as PropertyRow)})},[id]);
 
-  async function save(e:FormEvent){e.preventDefault();if(!property)return;setError('');setSaved('');const url=property.external_calendar_url?.trim()||null;if(url&&!url.toLowerCase().includes('.ics'))return setError('The imported calendar URL must be an iCalendar link ending in .ics.');const{error:updateError}=await supabase.from('properties').update({monthly_rent:Number(property.monthly_rent),monthly_prices:property.monthly_prices||{},availability_horizon_months:Number(property.availability_horizon_months)||12,cleaning_fee:Number(property.cleaning_fee),cancellation_policy:property.cancellation_policy,minimum_nights:Math.max(32,Number(property.minimum_nights)),external_calendar_url:url,external_calendar_name:property.external_calendar_name||null}).eq('id',id);if(updateError)setError(updateError.message);else setSaved('Calendar and pricing settings saved.')}
+  async function save(e:FormEvent){e.preventDefault();if(!property)return;setError('');setSaved('');const url=property.external_calendar_url?.trim()||null;if(url&&!url.toLowerCase().includes('.ics'))return setError('The imported calendar URL must be an iCalendar link ending in .ics.');const minimumNights=Number(property.minimum_nights);if(minimumNights<MINIMUM_STAY_NIGHTS||minimumNights>MAXIMUM_STAY_NIGHTS)return setError(`Minimum stay must be between ${MINIMUM_STAY_NIGHTS} and ${MAXIMUM_STAY_NIGHTS} nights.`);const{error:updateError}=await supabase.from('properties').update({monthly_rent:Number(property.monthly_rent),monthly_prices:property.monthly_prices||{},availability_horizon_months:Number(property.availability_horizon_months)||12,cleaning_fee:Number(property.cleaning_fee),cancellation_policy:property.cancellation_policy,minimum_nights:minimumNights,external_calendar_url:url,external_calendar_name:property.external_calendar_name||null}).eq('id',id);if(updateError)setError(updateError.message);else setSaved('Calendar and pricing settings saved.')}
   function set(key:keyof PropertyRow,value:unknown){if(property)setProperty({...property,[key]:value})}
   function setMonth(key:string,value:string){if(!property)return;const prices={...(property.monthly_prices||{})};if(value==='')delete prices[key];else prices[key]=Number(value);setProperty({...property,monthly_prices:prices})}
   function useBasePrice(key:string){if(!property)return;const prices={...(property.monthly_prices||{})};delete prices[key];setProperty({...property,monthly_prices:prices})}

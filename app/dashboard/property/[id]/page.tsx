@@ -6,6 +6,7 @@ import {useParams} from 'next/navigation';
 import {Header,Footer} from '../../../components';
 import {PropertyRow,islands} from '../../../../lib/data';
 import {supabase} from '../../../../lib/supabase';
+import {MAXIMUM_STAY_NIGHTS,MINIMUM_STAY_NIGHTS} from '../../../../lib/rentalRules';
 import '../../owner-tools.css';
 import './photo-editor-link.css';
 import './cancellation-note.css';
@@ -16,7 +17,7 @@ export default function PropertyEditor(){
   const[error,setError]=useState('');
   const[saved,setSaved]=useState('');
   useEffect(()=>{supabase.from('properties').select('*').eq('id',id).single().then(({data,error})=>{if(error)setError(error.message);else setProperty(data as PropertyRow)})},[id]);
-  async function save(e:FormEvent){e.preventDefault();if(!property)return;setError('');setSaved('');const{error:updateError}=await supabase.from('properties').update({title:property.title,description:property.description,location:property.location,full_address:property.full_address?.trim()||null,island:property.island,monthly_rent:Number(property.monthly_rent),security_deposit:Number(property.security_deposit),cleaning_fee:Number(property.cleaning_fee),cancellation_policy:property.cancellation_policy,minimum_nights:Math.max(32,Number(property.minimum_nights)),bedrooms:Number(property.bedrooms),bathrooms:Number(property.bathrooms),max_guests:Math.max(1,Number(property.max_guests)),is_published:property.is_published}).eq('id',id);if(updateError)setError(updateError.message);else setSaved('Property details saved.');}
+  async function save(e:FormEvent){e.preventDefault();if(!property)return;setError('');setSaved('');const minimumNights=Number(property.minimum_nights);if(minimumNights<MINIMUM_STAY_NIGHTS||minimumNights>MAXIMUM_STAY_NIGHTS)return setError(`Minimum stay must be between ${MINIMUM_STAY_NIGHTS} and ${MAXIMUM_STAY_NIGHTS} nights.`);const{error:updateError}=await supabase.from('properties').update({title:property.title,description:property.description,location:property.location,full_address:property.full_address?.trim()||null,island:property.island,monthly_rent:Number(property.monthly_rent),security_deposit:Number(property.security_deposit),cleaning_fee:Number(property.cleaning_fee),cancellation_policy:property.cancellation_policy,minimum_nights:minimumNights,bedrooms:Number(property.bedrooms),bathrooms:Number(property.bathrooms),max_guests:Math.max(1,Number(property.max_guests)),is_published:property.is_published}).eq('id',id);if(updateError)setError(updateError.message);else setSaved('Property details saved.');}
   if(!property)return <><Header/><main className="owner-tool-page"><p>{error||'Loading property editor…'}</p></main></>;
   const set=(key:keyof PropertyRow,value:unknown)=>setProperty({...property,[key]:value});
   const cover=property.image_url||property.photo_urls?.[0];

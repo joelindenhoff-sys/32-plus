@@ -1025,14 +1025,17 @@ function ContractAgreement({
         )}
         <p>
           The Tenant declares that this temporary need is genuine and
-          corresponds to the agreed rental period.
+          corresponds to the agreed rental period. The parties acknowledge
+          that the property is not intended to constitute the Tenant&apos;s
+          habitual or permanent residence.
         </p>
       </ContractClause>
       <ContractClause number="2" title="Duration">
         <p>
           The rental begins on <strong>{europeanDate(request.move_in)}</strong>{" "}
           and ends on <strong>{europeanDate(request.move_out)}</strong>, without
-          prejudice to any extension expressly agreed between the parties.
+          prejudice to any extension expressly agreed between the parties and
+          permitted by the 32+ platform booking limits.
         </p>
       </ContractClause>
       <ContractClause number="3" title="Rent">

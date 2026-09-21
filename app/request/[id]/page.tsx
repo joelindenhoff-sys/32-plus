@@ -7,18 +7,14 @@ import { Header, Footer } from "../../components";
 import { getHome, Home, propertyToHome, PropertyRow } from "../../../lib/data";
 import { formatFeeRate, formatMinorUnits } from "../../../lib/pricing";
 import { supabase } from "../../../lib/supabase";
+import {
+  countStayNights,
+  getStayDurationError,
+  OTHER_TEMPORARY_STAY_REASON,
+  RENTAL_DURATION_MESSAGE,
+  TEMPORARY_STAY_REASONS,
+} from "../../../lib/rentalRules";
 import "./request.css";
-
-const purposes = [
-  "Work / professional assignment",
-  "Remote work / temporary professional stay",
-  "Study / training",
-  "Medical / recovery",
-  "Temporary relocation",
-  "Home temporarily unavailable",
-  "Family / personal temporary circumstances",
-  "Other genuine temporary circumstance",
-];
 
 type PricingQuote = {
   pricing_policy_id: string;
@@ -33,16 +29,6 @@ type PricingQuote = {
   currency: string;
 };
 
-function nights(start: string, end: string) {
-  return start && end
-    ? Math.round(
-        (new Date(`${end}T12:00:00`).getTime() -
-          new Date(`${start}T12:00:00`).getTime()) /
-          86_400_000,
-      )
-    : 0;
-}
-
 function date(value: string) {
   const [year, month, day] = value.split("-");
   return `${day}/${month}/${year}`;
@@ -54,7 +40,7 @@ function RequestReview() {
   const moveIn = query.get("moveIn") || "";
   const moveOut = query.get("moveOut") || "";
   const guests = Math.max(1, Number(query.get("guests") || 1));
-  const stayNights = nights(moveIn, moveOut);
+  const stayNights = countStayNights(moveIn, moveOut);
 
   const [home, setHome] = useState<Home | null>(null);
   const [ownerId, setOwnerId] = useState("");
@@ -94,7 +80,7 @@ function RequestReview() {
   }, [id]);
 
   useEffect(() => {
-    if (!ownerId || stayNights < 32) {
+    if (!ownerId || getStayDurationError(moveIn, moveOut, home?.minimumNights)) {
       setQuote(null);
       return;
     }
@@ -121,19 +107,19 @@ function RequestReview() {
     return () => {
       active = false;
     };
-  }, [id, moveIn, moveOut, ownerId, stayNights]);
+  }, [id, moveIn, moveOut, ownerId, stayNights, home?.minimumNights]);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
     setError("");
     if (!home || !ownerId)
       return setError("This property is not accepting rental requests yet.");
-    if (stayNights < 32)
-      return setError("A rental request must be for at least 32 nights.");
+    const durationError = getStayDurationError(moveIn, moveOut, home.minimumNights);
+    if (durationError) return setError(durationError);
     if (!quote)
       return setError("Please wait for the verified price before continuing.");
     if (!purpose) return setError("Please select your temporary reason.");
-    if (purpose === "Other genuine temporary circumstance" && !details.trim())
+    if (purpose === OTHER_TEMPORARY_STAY_REASON && !details.trim())
       return setError("Please explain your other temporary reason.");
     if (!confirmed) return setError("Please confirm the declaration.");
 
@@ -145,7 +131,7 @@ function RequestReview() {
       p_occupants: guests,
       p_purpose_category: purpose,
       p_purpose_details:
-        purpose === "Other genuine temporary circumstance"
+        purpose === OTHER_TEMPORARY_STAY_REASON
           ? details.trim()
           : "Not required for selected category",
       p_tenant_declaration: true,
@@ -224,7 +210,7 @@ function RequestReview() {
             <h2>Purpose of stay</h2>
             <p className="booking-help">
               Seasonal rentals require a genuine temporary purpose. The owner
-              reviews this before approving your request.
+              reviews this before approving your request. {RENTAL_DURATION_MESSAGE}
             </p>
             <label>
               Temporary reason
@@ -234,12 +220,12 @@ function RequestReview() {
                 onChange={(event) => setPurpose(event.target.value)}
               >
                 <option value="">Select a reason</option>
-                {purposes.map((item) => (
+                {TEMPORARY_STAY_REASONS.map((item) => (
                   <option key={item}>{item}</option>
                 ))}
               </select>
             </label>
-            {purpose === "Other genuine temporary circumstance" && (
+            {purpose === OTHER_TEMPORARY_STAY_REASON && (
               <label>
                 Other temporary reason — please explain
                 <textarea
@@ -260,8 +246,9 @@ function RequestReview() {
                 onChange={(event) => setConfirmed(event.target.checked)}
               />
               <span>
-                I confirm that the information is true and this accommodation
-                is required for a genuine temporary purpose.
+                I confirm that the information is true, this accommodation is
+                required for a genuine temporary housing need, and it is not
+                intended to be my habitual or permanent residence.
               </span>
             </label>
             {error && <div className="error">{error}</div>}
