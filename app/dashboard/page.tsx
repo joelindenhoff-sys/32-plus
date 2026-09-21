@@ -69,6 +69,7 @@ type RentalRequest = {
     owner_signature_data: string | null;
     tenant_signature_data: string | null;
     identity_released: boolean;
+    property_address: string | null;
   } | null;
 };
 
@@ -293,7 +294,7 @@ export default function Dashboard() {
         owner_id: profile.id,
         title: "Untitled property",
         description: "",
-        location: "Add public location",
+        location: "Add city or area",
         island: "Gran Canaria",
         monthly_rent: 1,
         security_deposit: 0,
@@ -641,12 +642,13 @@ export default function Dashboard() {
                   />
                 </label>
                 <label>
-                  Location
+                  City or area
                   <input
                     required
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                   />
+                  <span>Public city or general area only. Do not enter the street address.</span>
                 </label>
                 <label>
                   Island
@@ -1009,8 +1011,9 @@ function ContractAgreement({
         <div>
           <dt>Property</dt>
           <dd>
-            {request.properties?.location || "Location pending"} — full address
-            pending
+            {identitiesReleased && request.contracts?.property_address
+              ? request.contracts.property_address
+              : `${request.properties?.location || "City or area pending"} — exact address released after payment`}
           </dd>
         </div>
         <div>
@@ -1361,12 +1364,13 @@ function OwnerDashboard({ data }: { data: any }) {
                   />
                 </label>
                 <label>
-                  Location
+                  City or area
                   <input
                     required
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                   />
+                  <span>Public city or general area only. Do not enter the street address.</span>
                 </label>
                 <label>
                   Island
