@@ -1,6 +1,6 @@
 .nav .logo {
   width: 150px;
-  height: 72px;
+  height: 97px;
   object-fit: contain;
   object-position: left center;
   display: block;
@@ -38,8 +38,8 @@
 
   .nav .logo {
     width: 120px;
-    height: 58px;
-    max-height: 58px;
+    height: 78px;
+    max-height: 78px;
   }
 
   .login-wrap {
