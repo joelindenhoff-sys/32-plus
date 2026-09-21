@@ -1,6 +1,6 @@
 .nav .logo {
-  width: 142px;
-  height: 82px;
+  width: 150px;
+  height: 72px;
   object-fit: contain;
   object-position: left center;
   display: block;
@@ -20,29 +20,29 @@
 
 /* Match the header edges to the 1,148px-wide homepage content column. */
 .nav {
-  height: 108px;
+  height: 116px;
   padding-left: max(20px, calc((100vw - 1148px) / 2)) !important;
   padding-right: max(20px, calc((100vw - 1148px) / 2)) !important;
 }
 
 .login-wrap {
-  min-height: calc(100vh - 108px);
+  min-height: calc(100vh - 116px);
 }
 
 @media (max-width: 560px) {
   .nav {
-    height: 91px;
+    height: 96px;
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
 
   .nav .logo {
-    width: 116px;
-    height: 67px;
-    max-height: 67px;
+    width: 120px;
+    height: 58px;
+    max-height: 58px;
   }
 
   .login-wrap {
-    min-height: calc(100vh - 91px);
+    min-height: calc(100vh - 96px);
   }
 }
