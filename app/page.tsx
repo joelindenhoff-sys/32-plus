@@ -9,7 +9,7 @@ import {getStayDurationError} from '../lib/rentalRules';
 import './homepage.css';
 
 const faqs=[
-  ['What is a seasonal rental?','A furnished home rented for a genuine temporary purpose, such as work, study, relocation or another time-limited circumstance. It is not a tourist stay or permanent residence.'],
+  ['What is a 32+ stay?','A furnished home rented for a genuine temporary purpose, such as work, study, relocation or another time-limited circumstance. It is not a tourist stay or permanent residence.'],
   ['Can I book instantly?','No. Every stay is request-only. You submit your dates and purpose of stay, and the owner reviews the request before any agreement is made.'],
   ['How long can I stay?','Flexible rentals from 32 nights to 11 months. This is a 32+ platform booking range; the temporary purpose of the stay remains essential.'],
   ['When do I pay?','Payment is only requested after owner approval and acceptance of the rental agreement. Online payment is not yet active during this early release.'],

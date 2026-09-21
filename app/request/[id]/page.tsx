@@ -209,7 +209,7 @@ function RequestReview() {
           <section>
             <h2>Purpose of stay</h2>
             <p className="booking-help">
-              Seasonal rentals require a genuine temporary purpose. The owner
+              Stays of 32 nights or more require a genuine temporary purpose. The owner
               reviews this before approving your request. {RENTAL_DURATION_MESSAGE}
             </p>
             <label>
