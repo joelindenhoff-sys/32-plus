@@ -20,18 +20,18 @@
 
 /* Match the header edges to the 1,148px-wide homepage content column. */
 .nav {
-  height: 116px;
+  height: 136px;
   padding-left: max(20px, calc((100vw - 1148px) / 2)) !important;
   padding-right: max(20px, calc((100vw - 1148px) / 2)) !important;
 }
 
 .login-wrap {
-  min-height: calc(100vh - 116px);
+  min-height: calc(100vh - 136px);
 }
 
 @media (max-width: 560px) {
   .nav {
-    height: 96px;
+    height: 120px;
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
@@ -43,6 +43,6 @@
   }
 
   .login-wrap {
-    min-height: calc(100vh - 96px);
+    min-height: calc(100vh - 120px);
   }
 }
