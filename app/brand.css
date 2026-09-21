@@ -1,9 +1,15 @@
 .nav .logo {
-  width: 72px;
-  height: 72px;
+  width: 142px;
+  height: 82px;
   object-fit: contain;
   object-position: left center;
   display: block;
+}
+
+.nav-brand {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
 }
 
 .login-card .login-heading img {
@@ -14,29 +20,29 @@
 
 /* Match the header edges to the 1,148px-wide homepage content column. */
 .nav {
-  height: 96px;
+  height: 108px;
   padding-left: max(20px, calc((100vw - 1148px) / 2)) !important;
   padding-right: max(20px, calc((100vw - 1148px) / 2)) !important;
 }
 
 .login-wrap {
-  min-height: calc(100vh - 96px);
+  min-height: calc(100vh - 108px);
 }
 
 @media (max-width: 560px) {
   .nav {
-    height: 84px;
+    height: 91px;
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
 
   .nav .logo {
-    width: 62px;
-    height: 62px;
-    max-height: 62px;
+    width: 116px;
+    height: 67px;
+    max-height: 67px;
   }
 
   .login-wrap {
-    min-height: calc(100vh - 84px);
+    min-height: calc(100vh - 91px);
   }
 }
