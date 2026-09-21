@@ -607,7 +607,7 @@ export default function Dashboard() {
             {listings.length ? (
               listings.map((home) => (
                 <div className="listing-row" key={home.id}>
-                  <img src={home.image_url || "/logo-small.png"} alt="" />
+                  <img src={home.image_url || "/logo-secondary.png"} alt="" />
                   <div>
                     <strong>{home.title}</strong>
                     <div className="muted">
@@ -1320,7 +1320,7 @@ function OwnerDashboard({ data }: { data: any }) {
             {listings.length ? (
               listings.map((home: PropertyRow) => (
                 <div className="listing-row" key={home.id}>
-                  <img src={home.image_url || "/logo-small.png"} alt="" />
+                  <img src={home.image_url || "/logo-secondary.png"} alt="" />
                   <div>
                     <strong>{home.title}</strong>
                     <div className="muted">
@@ -1601,7 +1601,7 @@ function OwnerDashboardWithDeposit({ data }: { data: any }) {
             {listings.length ? (
               listings.map((home: PropertyRow) => (
                 <div className="listing-row" key={home.id}>
-                  <img src={home.image_url || "/logo-small.png"} alt="" />
+                  <img src={home.image_url || "/logo-secondary.png"} alt="" />
                   <div>
                     <strong>{home.title}</strong>
                     <div className="muted">
