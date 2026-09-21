@@ -1,6 +1,6 @@
 .nav .logo {
-  width: 62px;
-  height: 62px;
+  width: 164px;
+  height: 58px;
   object-fit: contain;
   object-position: left center;
   display: block;
@@ -25,8 +25,8 @@
   }
 
   .nav .logo {
-    width: 54px;
-    height: 54px;
-    max-height: 54px;
+    width: 132px;
+    height: 46px;
+    max-height: 46px;
   }
 }
