@@ -5,6 +5,7 @@ import { Header, Footer } from "../components";
 import { formatFeeRate, formatMinorUnits } from "../../lib/pricing";
 import { supabase } from "../../lib/supabase";
 import "./admin.css";
+import ContactInbox from "./ContactInbox";
 
 type AdminBooking = {
   id: string;
@@ -78,6 +79,7 @@ export default function AdminPage() {
             {!bookings.length && <p>No rental requests yet.</p>}
           </div>
         )}
+        {!loading && !denied && <ContactInbox />}
       </main>
       <Footer />
     </>

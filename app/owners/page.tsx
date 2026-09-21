@@ -1,24 +1,12 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { Header, Footer } from "../components";
-import { formatFeeRate } from "../../lib/pricing";
-import { supabase } from "../../lib/supabase";
+import type { Metadata } from "next";
+import FeeExample from "../info/_components/FeeExample";
+import "../info/info.css";
+
+export const metadata: Metadata = { title: "For Owners | 32+ Night Rentals", description: "List a furnished home for stays of 32 nights or longer. Understand owner fees and the rental request process." };
 
 export default function Owners() {
-  const [ownerFeeRate, setOwnerFeeRate] = useState<number | null>(null);
-
-  useEffect(() => {
-    supabase.rpc("get_current_public_pricing").then(({ data }) => {
-      setOwnerFeeRate(
-        data?.[0]?.owner_fee_rate == null
-          ? null
-          : Number(data[0].owner_fee_rate),
-      );
-    });
-  }, []);
-
   return (
     <>
       <Header />
@@ -34,14 +22,11 @@ export default function Owners() {
           stay. Add your property, price and availability and receive enquiries
           online.
         </p>
-        <section className="owner-fee-card" id="owner-fees">
-          <span>32+ service fee</span>
-          <strong>
-            {ownerFeeRate === null
-              ? "Current rate shown at booking"
-              : formatFeeRate(ownerFeeRate)}
-          </strong>
-          <p>Free to list. You only pay when you receive a successful booking.</p>
+        <section id="owner-fees" aria-label="Owner fees">
+          <FeeExample audience="owner" />
+          <p className="lead">Free to list. The owner service fee is calculated on accommodation rent only and recorded in the booking quote. It is intended to be deducted from rent when a successful booking is paid, rather than charged for publishing a listing.</p>
+          <p className="lead">The platform provides listing tools, availability and pricing management, booking-request review and digital agreement records. Live payment collection and payouts are not yet available; no owner fee is collected by the current request workflow.</p>
+          <p className="lead"><Link href="/info/payouts">Read how payouts work →</Link></p>
         </section>
         <div className="owner-grid">
           <div className="owner-box">
