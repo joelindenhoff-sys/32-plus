@@ -1,18 +1,17 @@
 'use client';
 import Link from 'next/link';
 import { useRef, useState, type FormEvent } from 'react';
-import { supabase } from '../../../lib/supabase';
 import { validateContact, type ContactInput } from '../../../lib/contact';
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState('');
   const pending = useRef(false);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (pending.current) return;
-    setError(''); setSuccess(false);
+    setError(''); setSuccess('');
     const form = event.currentTarget;
     const values = new FormData(form);
     const input = Object.fromEntries(['name', 'email', 'user_type', 'subject', 'message'].map(key => [key, String(values.get(key) || '').trim()])) as ContactInput;
@@ -22,12 +21,14 @@ export default function ContactForm() {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
     try {
-      const { error: saveError } = await supabase.from('contact_messages').insert(input).abortSignal(controller.signal);
-      if (saveError) {
-        setError(saveError.code === 'P0001' ? 'Too many enquiries have been submitted recently. Please try again later.' : 'We could not confirm receipt of your enquiry. Please try again later. Your text is still here.');
+      const response = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(input), signal: controller.signal });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok && response.status !== 202) {
+        setError(result.error || 'We could not confirm receipt of your enquiry. Please try again later. Your text is still here.');
         return;
       }
-      form.reset(); setSuccess(true);
+      form.reset();
+      setSuccess(result.emailed ? 'Your enquiry has been received and emailed to the support team. Thank you.' : 'Your enquiry has been saved securely. The email notification could not be sent, but the support team can still view it in the 32+ inbox.');
     } catch { setError('We could not confirm receipt. Check your connection and try again. Your text is still here.'); }
     finally { clearTimeout(timeout); pending.current = false; setLoading(false); }
   }
@@ -42,6 +43,6 @@ export default function ContactForm() {
       <button className="primary" type="submit" disabled={loading}>{loading ? 'Sending…' : 'Submit enquiry'}</button>
     </fieldset>
     {error && <p className="error" role="alert">{error}</p>}
-    {success && <p className="notice" role="status">Your enquiry has been received and saved for the support team. Thank you.</p>}
+    {success && <p className="notice" role="status">{success}</p>}
   </form></section>;
 }
