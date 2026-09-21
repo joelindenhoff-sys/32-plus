@@ -7,9 +7,15 @@ function required(name: string) {
 }
 
 export function createSupabaseAdmin() {
+  const serverSecret =
+    process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serverSecret)
+    throw new Error(
+      "SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY is not configured.",
+    );
   return createClient(
     required("NEXT_PUBLIC_SUPABASE_URL"),
-    required("SUPABASE_SERVICE_ROLE_KEY"),
+    serverSecret,
     { auth: { autoRefreshToken: false, persistSession: false } },
   );
 }
@@ -28,4 +34,3 @@ export async function authenticateRequest(request: Request) {
   const { data, error } = await client.auth.getUser(token);
   return error ? null : data.user;
 }
-

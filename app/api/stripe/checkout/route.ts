@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     const admin = createSupabaseAdmin();
     const { data: booking, error } = await admin
       .from("rental_requests")
-      .select("id,tenant_id,owner_id,status,accommodation_amount,guest_fee_amount,guest_total_amount,currency,stripe_checkout_session_id,properties(title),owner:profiles!rental_requests_owner_id_fkey(stripe_account_id,stripe_onboarding_complete,stripe_payouts_enabled)")
+      .select("id,tenant_id,owner_id,status,accommodation_amount,guest_fee_amount,guest_total_amount,currency,stripe_checkout_session_id,properties(title)")
       .eq("id", requestId)
       .single();
     if (error) throw error;
@@ -26,10 +26,6 @@ export async function POST(request: Request) {
       if (existing.status === "open" && existing.url) return NextResponse.json({ url: existing.url });
     }
 
-    const owner = Array.isArray(booking.owner) ? booking.owner[0] : booking.owner;
-    if (!owner?.stripe_account_id || !owner.stripe_onboarding_complete || !owner.stripe_payouts_enabled)
-      return NextResponse.json({ error: "The owner must finish payout setup before payment can be accepted." }, { status: 409 });
-
     const property = Array.isArray(booking.properties) ? booking.properties[0] : booking.properties;
     const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin;
     const transferGroup = `rental_${booking.id}`;
@@ -38,7 +34,7 @@ export async function POST(request: Request) {
         mode: "payment",
         customer_email: user.email,
         line_items: [
-          { price_data: { currency: booking.currency.toLowerCase(), unit_amount: booking.accommodation_amount, product_data: { name: property?.title || "32+ seasonal accommodation" } }, quantity: 1 },
+          { price_data: { currency: booking.currency.toLowerCase(), unit_amount: booking.accommodation_amount, product_data: { name: property?.title || "32+ stay" } }, quantity: 1 },
           { price_data: { currency: booking.currency.toLowerCase(), unit_amount: booking.guest_fee_amount, product_data: { name: "32+ guest service fee" } }, quantity: 1 },
         ],
         payment_intent_data: { transfer_group: transferGroup, metadata: { rental_request_id: booking.id } },
@@ -58,6 +54,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: session.url });
   } catch (error) {
     console.error("Stripe Checkout error", error);
+    if (
+      error instanceof Error &&
+      error.message.includes("SUPABASE_") &&
+      error.message.includes("not configured")
+    )
+      return NextResponse.json(
+        { error: "Secure payment is being configured. Please try again shortly." },
+        { status: 503 },
+      );
     return NextResponse.json({ error: "Payment could not be started." }, { status: 500 });
   }
 }

@@ -739,7 +739,9 @@ function RequestCard({
 }) {
   const [confirmed, setConfirmed] = useState(false);
   const [signature, setSignature] = useState("");
-  const [showContract, setShowContract] = useState(false);
+  const [showContract, setShowContract] = useState(
+    request.status === "submitted" || request.status === "approved",
+  );
   const [paymentError, setPaymentError] = useState("");
   const [startingPayment, setStartingPayment] = useState(false);
   async function startPayment() {
@@ -757,6 +759,7 @@ function RequestCard({
     window.location.href = result.url;
   }
   const hasContract =
+    request.status === "submitted" ||
     request.status === "approved" ||
     request.status === "tenant_signed" ||
     request.status === "payment_pending" ||
@@ -767,7 +770,7 @@ function RequestCard({
         className="request-property-link"
         href={`/home/${request.property_id}`}
       >
-        {request.properties?.title || "Seasonal home"}
+        {request.properties?.title || "32+ home"}
         <span>→</span>
       </Link>
       <p>
@@ -977,14 +980,17 @@ function ContractAgreement({
 }) {
   const rent = request.properties?.monthly_rent || 0;
   const deposit = request.properties?.security_deposit || 0;
-  const landlord =
-    request.contracts?.owner_name ||
-    (ownerView ? viewerName : null) ||
-    "Verified property owner";
-  const tenant =
-    request.contracts?.tenant_name ||
-    (!ownerView ? viewerName : null) ||
-    "Verified tenant";
+  const identitiesReleased = request.contracts?.identity_released === true;
+  const landlord = identitiesReleased
+    ? request.contracts?.owner_name ||
+      (ownerView ? viewerName : null) ||
+      "Verified property owner"
+    : "Property owner — name released after payment";
+  const tenant = identitiesReleased
+    ? request.contracts?.tenant_name ||
+      (!ownerView ? viewerName : null) ||
+      "Verified tenant"
+    : "Tenant — name released after payment";
   return (
     <article className="contract-document">
       <header>
@@ -1024,11 +1030,11 @@ function ContractAgreement({
           </div>
         )}
       </dl>
-      {!request.contracts?.identity_released && (
+      {!identitiesReleased && (
         <p className="contract-privacy-note">
-          For booking security, only first names are shared between the parties
-          before confirmed payment. Full contractual identities and the other
-          party&apos;s signature are released after payment.
+          For booking security, party names and signatures are withheld from
+          the agreement until 32+ receives confirmed payment for the
+          reservation.
         </p>
       )}
       <ContractClause number="1" title="Purpose">
@@ -1114,7 +1120,7 @@ function ContractAgreement({
         <div>
           <strong>LANDLORD</strong>
           <span>{landlord}</span>
-          {request.contracts?.owner_signature_data && (
+          {identitiesReleased && request.contracts?.owner_signature_data && (
             <img
               src={request.contracts.owner_signature_data}
               alt="Landlord signature"
@@ -1130,7 +1136,7 @@ function ContractAgreement({
         <div>
           <strong>TENANT</strong>
           <span>{tenant}</span>
-          {request.contracts?.tenant_signature_data && (
+          {identitiesReleased && request.contracts?.tenant_signature_data && (
             <img
               src={request.contracts.tenant_signature_data}
               alt="Tenant signature"
