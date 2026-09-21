@@ -19,7 +19,7 @@ export function Header() {
     return () => data.subscription.unsubscribe();
   }, []);
   async function signOut() { await supabase.auth.signOut(); window.location.href = "/"; }
-  return <header className="nav"><Link href="/" aria-label="32+ Night Rentals home"><picture><source media="(max-width: 560px)" srcSet="/logo-small.png"/><img className="logo" src="/logo.png" alt="32+ Plus — 32+ Night Rentals"/></picture></Link><nav aria-label="Main navigation"><Link href="/homes">Find a home</Link><Link href="/owners">For owners</Link>{signedIn ? <><Link href="/dashboard">Dashboard</Link><button className="nav-button" onClick={signOut}>Sign out</button></> : <Link className="pill" href="/login">Sign in</Link>}</nav></header>;
+  return <header className="nav"><Link href="/" aria-label="32+ Night Rentals home"><picture><source media="(max-width: 560px)" srcSet="/logo-small.png"/><img className="logo" src="/logo.png" alt="32+ Plus — 32+ Night Rentals"/></picture></Link><nav aria-label="Main navigation"><Link href="/homes">Find a home</Link><Link href="/owners">For owners</Link>{signedIn ? <><Link href="/dashboard">Dashboard</Link><button className="nav-button" onClick={signOut}>Sign out</button></> : <Link className="pill" href="/login">Log in or sign up</Link>}</nav></header>;
 }
 
 export function Footer() {
