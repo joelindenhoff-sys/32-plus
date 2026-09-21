@@ -15,3 +15,29 @@
 .property-actions button.is-saved svg{fill:#ee6f9c;stroke:#cf4f7c}
 @media(max-width:900px){.property-page{padding:22px 20px 65px}.photo-gallery{grid-template-columns:2fr 1fr;grid-template-rows:180px 180px}.photo-gallery>div:nth-child(4),.photo-gallery>div:nth-child(5){display:none}.property-content{grid-template-columns:1fr;gap:35px}.request-panel{position:static;grid-row:1}.property-details{grid-row:2}}
 @media(max-width:600px){.property-top{align-items:flex-start}.property-top h1{font-size:22px}.property-actions button:first-child{display:none}.photo-gallery{display:block;height:290px}.photo-gallery>div{display:none}.photo-gallery .photo-main{display:block;height:100%}.property-content{padding-top:24px}.request-panel{padding:19px}.amenities>div{grid-template-columns:1fr}.property-actions{padding-top:20px}}
+
+/* Comfortable property-page typography, aligned with Airbnb-style readability. */
+.property-top h1{font-size:30px;line-height:1.2}
+.property-top .back,.property-actions button{font-size:14px}
+.property-details h2{font-size:23px;line-height:1.25;margin-bottom:10px}
+.property-summary p{font-size:16px;line-height:1.45;margin:6px 0}
+.host-row strong{font-size:16px}
+.host-row span{font-size:14px;line-height:1.4}
+.property-highlights strong{font-size:16px}
+.property-highlights span{font-size:14px;line-height:1.5}
+.property-description p{font-size:16px;line-height:1.65}
+.amenities p{font-size:16px}
+.stay-process li strong{font-size:16px}
+.stay-process li span{font-size:14px;line-height:1.45}
+.request-price strong{font-size:23px}
+.request-price span{font-size:14px}
+.request-form label{font-size:12px}
+.request-form label span{font-size:11px}
+.request-form input,.request-form select,.request-form textarea{font-size:14px}
+.stay-summary,.estimate{font-size:14px}
+.request-note{font-size:13px;line-height:1.5}
+.guest-field small{font-size:12px;line-height:1.4}
+
+@media(max-width:600px){
+  .property-top h1{font-size:26px}
+}
