@@ -34,7 +34,7 @@ export default function Owners() {
           stay. Add your property, price and availability and receive enquiries
           online.
         </p>
-        <section className="owner-fee-card">
+        <section className="owner-fee-card" id="owner-fees">
           <span>32+ service fee</span>
           <strong>
             {ownerFeeRate === null
