@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/stripe/release-payouts",
+      "schedule": "0 * * * *"
+    }
+  ]
+}

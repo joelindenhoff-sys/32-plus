@@ -23,6 +23,9 @@ type Profile = {
   role: "tenant" | "owner" | "admin";
   full_name: string | null;
   saved_signature_data: string | null;
+  stripe_account_id: string | null;
+  stripe_onboarding_complete: boolean;
+  stripe_payouts_enabled: boolean;
 };
 type RentalRequest = {
   id: string;
@@ -186,7 +189,15 @@ export default function Dashboard() {
       }
       const initialMode: "tenant" | "owner" =
         data.role === "owner" || data.role === "admin" ? "owner" : "tenant";
-      setProfile(data as Profile);
+      let loadedProfile = data as Profile;
+      if (new URLSearchParams(window.location.search).has("stripe")) {
+        const { data: sessionData } = await supabase.auth.getSession();
+        const response = await fetch("/api/stripe/connect/onboard", {
+          headers: { Authorization: `Bearer ${sessionData.session?.access_token || ""}` },
+        });
+        if (response.ok) loadedProfile = { ...loadedProfile, ...(await response.json()) };
+      }
+      setProfile(loadedProfile);
       setMode(initialMode);
       await refresh(user.id, initialMode);
       setLoading(false);
@@ -729,6 +740,22 @@ function RequestCard({
   const [confirmed, setConfirmed] = useState(false);
   const [signature, setSignature] = useState("");
   const [showContract, setShowContract] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
+  const [startingPayment, setStartingPayment] = useState(false);
+  async function startPayment() {
+    setPaymentError("");
+    setStartingPayment(true);
+    const { data } = await supabase.auth.getSession();
+    const response = await fetch("/api/stripe/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${data.session?.access_token || ""}` },
+      body: JSON.stringify({ requestId: request.id }),
+    });
+    const result = await response.json();
+    setStartingPayment(false);
+    if (!response.ok) return setPaymentError(result.error || "Payment could not be started.");
+    window.location.href = result.url;
+  }
   const hasContract =
     request.status === "approved" ||
     request.status === "tenant_signed" ||
@@ -859,14 +886,9 @@ function RequestCard({
         </div>
       )}
       {request.status === "tenant_signed" && (
-        <p className="form-help">
-          Tenant acceptance recorded
-          {request.contracts?.tenant_signed_at
-            ? ` on ${europeanDateTime(request.contracts.tenant_signed_at)}`
-            : ""}
-          . Payment setup is the next step.
-        </p>
+        <div className="acceptance"><p className="form-help">Tenant acceptance recorded{request.contracts?.tenant_signed_at ? ` on ${europeanDateTime(request.contracts.tenant_signed_at)}` : ""}. Payment is the next step.</p>{!owner && <button className="primary-small" disabled={startingPayment} onClick={startPayment}>{startingPayment ? "Opening secure payment…" : "Continue to secure payment"}</button>}{paymentError && <div className="error">{paymentError}</div>}</div>
       )}
+      {request.status === "payment_pending" && !owner && <div className="acceptance"><p className="form-help">Payment has started but is not yet confirmed.</p><button className="primary-small" disabled={startingPayment} onClick={startPayment}>{startingPayment ? "Opening secure payment…" : "Return to secure payment"}</button>{paymentError && <div className="error">{paymentError}</div>}</div>}
     </div>
   );
 }
@@ -1423,6 +1445,21 @@ function OwnerDashboardWithDeposit({ data }: { data: any }) {
     startListing,
     switchMode,
   } = data;
+  const [stripeError, setStripeError] = useState("");
+  const [openingStripe, setOpeningStripe] = useState(false);
+  async function startStripeOnboarding() {
+    setStripeError("");
+    setOpeningStripe(true);
+    const { data: sessionData } = await supabase.auth.getSession();
+    const response = await fetch("/api/stripe/connect/onboard", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${sessionData.session?.access_token || ""}` },
+    });
+    const result = await response.json();
+    setOpeningStripe(false);
+    if (!response.ok) return setStripeError(result.error || "Payout setup could not be opened.");
+    window.location.href = result.url;
+  }
   return (
     <>
       <Header />
@@ -1446,6 +1483,11 @@ function OwnerDashboardWithDeposit({ data }: { data: any }) {
         </div>
         {error && <div className="error">{error}</div>}
         {saved && <div className="notice">{saved}</div>}
+        <section className="panel account-panel payout-setup">
+          <div><p className="eyebrow">OWNER PAYOUTS</p><h2>{profile.stripe_payouts_enabled ? "Payout account connected" : "Set up secure payouts"}</h2><p>{profile.stripe_payouts_enabled ? "Your Stripe account is ready to receive owner proceeds. Transfers remain pending until 24 hours after check-in." : "Connect a Stripe account before guests can pay for an approved rental. Stripe securely collects your identity and bank details."}</p></div>
+          {!profile.stripe_payouts_enabled && <button type="button" className="account-primary" disabled={openingStripe} onClick={startStripeOnboarding}>{openingStripe ? "Opening Stripe…" : profile.stripe_account_id ? "Continue Stripe setup" : "Set up payouts"}</button>}
+          {stripeError && <div className="error">{stripeError}</div>}
+        </section>
         <section className="account-overview">
           <article>
             <span>⌂</span>
